@@ -1,0 +1,19 @@
+.include "m16def.inc"
+.org 0x00
+  rjmp main 
+
+main:
+  ldi XL, 0x00 
+  ldi XH, 0x02 ; Load 0x0200 at double register X
+  ldi r16, 255 ; init r16 with 255
+
+loop:
+  st X, r16  ;store r16 value at the address of register X
+  adiw XL, 1  ;inc X so inc ram address
+  cpi r16, 0
+  breq finish ;if r16 is zero break else subi r16 and loop again
+  subi r16, 1
+  rjmp loop
+
+finish:
+  .exit
