@@ -1,3 +1,5 @@
+; Task A
+
 .include "m16def.inc"
 .org 0x00
   rjmp main 
@@ -18,5 +20,49 @@ loop:
 finish:
   .exit
 
+
+
+; Task B
+
+.include "m16def.inc"
+.org 0x00
+  rjmp main 
+
+main:
+  ldi XL, 0x00 
+  ldi XH, 0x02 ; Load 0x0200 at double register X
+  ldi YL, 0x00
+  ldi YH, 0x00  ;  Y is the zeros counter
+  ldi r16, 255  ; init r16 with 255
+
+loop:
+  st X, r16
+  adiw XL, 1
+  mov r17, r16
+  ldi r18, 0   ;same logic with taskA
+
+nested_loop:
+  lsr r17   ;shift right r17 to move LSB bit to carry
+  brcs skip_increase ; if carry (that is previus LSB) is 0 skip counter increase
+  adiw YL, 1
+
+skip_increase:
+  inc r18
+  cpi r18, 8  
+  brne nested_loop ;loop 8 times to watch all bits
+  cpi r16, 0
+  breq store_register 
+  subi r16, 1
+  rjmp loop
+
+store_register:
+  mov r14, YL  ;save counter to register pair r14, r15
+  mov r15, YH
+
+finish:
+  .exit
+
+
+;Task C
 
 
