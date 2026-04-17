@@ -65,4 +65,32 @@ finish:
 
 ;Task C
 
+.include "m16def.inc"
+.org 0x00
+  rjmp main 
+
+main:
+  ldi XL, 0x00 
+  ldi XH, 0x02 ; Load 0x0200 at double register X
+  ldi r16, 0  ;r16 is the counter of numbers
+  ldi r17, 255 ;r17 initial value
+
+loop:
+  st x, r17
+  adiw XL, 1
+  cpi r17, 0x81 
+  brsh skip    ;if r17 >= 0x81 rjmp to skip
+  cpi r17, 0x10  
+  brlo skip   ; if r17 < 0x10 jump to skip
+  inc r16  ; else increase counter
+
+skip:
+  cpi r17, 0  ;if r17 = 0 the values are finished
+  breq finish
+  subi r17, 1 ;else jump to the next number
+  rjmp loop
+
+finish:
+  .exit
+
 
